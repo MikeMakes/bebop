@@ -1,3 +1,4 @@
 .catkin_tools/
 bags/
 build/
+logs/
