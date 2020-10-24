@@ -1,0 +1,2 @@
+- setup-file:
+    local-name: /home/user/bebop_ws/devel/.private/rqt_image_view/setup.sh

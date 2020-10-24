@@ -1,0 +1,1 @@
+/home/user/bebop_ws/devel/.private/plotjuggler/share/plotjuggler/cmake/plotjugglerConfig.cmake

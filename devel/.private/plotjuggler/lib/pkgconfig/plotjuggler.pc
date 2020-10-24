@@ -1,0 +1,8 @@
+prefix=/home/user/bebop_ws/devel/.private/plotjuggler
+
+Name: plotjuggler
+Description: Description of plotjuggler
+Version: 2.8.4
+Cflags: 
+Libs: -L/home/user/bebop_ws/devel/.private/plotjuggler/lib 
+Requires: rosbag_storage roscpp roscpp_serialization tf tf2_ros diagnostic_msgs nav_msgs sensor_msgs plotjuggler_msgs
