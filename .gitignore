@@ -1,8 +1,10 @@
 <<<<<<< HEAD
 .catkin_tools/
 bags/
+bags
 build/
 logs/
+doc/bebop_autonomy/
 =======
 devel/
 logs/
