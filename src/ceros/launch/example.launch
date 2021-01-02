@@ -1,0 +1,3 @@
+<launch>
+  <node name="turtle_controller" pkg="turtlepilot" type="control.py"/>
+</launch>
