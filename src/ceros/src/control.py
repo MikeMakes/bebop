@@ -16,27 +16,30 @@ rospy.init_node('controller', anonymous=True)
 goal=False
 turtle_x=0
 turtle_y=0
+turtle_z=0
 turtle_theta=0
 
 Wx=rospy.get_param('Wx',0)	#Parametros privados
 Wy=rospy.get_param('Wy',0)
-Wz=rospy.get_param('Wz',1)
+Wz=rospy.get_param('Wz',3)
 Pv=rospy.get_param('Pv',1)
 Po=rospy.get_param('Po',2)
-thresh=rospy.get_param('~thresh',0.25)
-rate = rospy.Rate(rospy.get_param('~hz',10))
+thresh=rospy.get_param('~thresh',0.1)
+rate = rospy.Rate(rospy.get_param('~hz',100))
 
 def callback(data):
-	global turtle_x,turtle_y,turtle_theta
+	global turtle_x,turtle_y,turtle_theta, turtle_z
 	turtle_x = data.pose.pose.position.x
 	turtle_y = data.pose.pose.position.y
-	turtle_Z = data.pose.pose.position.z
+	turtle_z = data.pose.pose.position.z
 	turtle_theta=data.pose.pose.orientation.w
-	rospy.loginfo("cb:")	
-	rospy.loginfo("turtle_x:")		
-	rospy.loginfo(turtle_x)
-	rospy.loginfo("turtle_y:")		
-	rospy.loginfo(turtle_y)
+	#rospy.loginfo("cb:")	
+	#rospy.loginfo("turtle_x:")		
+	#rospy.loginfo(turtle_x)
+	#rospy.loginfo("turtle_y:")		
+	#rospy.loginfo(turtle_y)
+	rospy.loginfo("turtle_z:")		
+	rospy.loginfo(turtle_z)
 	
 
 rospy.Subscriber("/bebop/odom", Odometry, callback)
@@ -47,10 +50,11 @@ def listnener():
 def control():
 	rospy.loginfo("control:")
 	while not rospy.is_shutdown():
-		global goal, dist, ori, twist, Wx, Wy, turtle_x, turtle_y, turtle_theta
-		rospy.loginfo("WX:")
-		rospy.loginfo(Wx)
-		dist = sqrt( pow(Wx - turtle_x,2) + pow(Wy - turtle_y,2) )
+		global goal, dist, ori, twist, Wx, Wy, turtle_x, turtle_y, turtle_theta, turtle_z
+		rospy.loginfo("WZ:")
+		rospy.loginfo(Wz)
+		#dist = sqrt( pow(Wx - turtle_x,2) + pow(Wy - turtle_y,2) )
+		dist = abs(Wz-turtle_z)		
 		rospy.loginfo("dist:")		
 		rospy.loginfo(dist)
 		rospy.loginfo("----------")
@@ -58,20 +62,20 @@ def control():
 		if dist < thresh:
 			global twist
 			goal = True
-			twist.linear.x = 0
+			#twist.linear.x = 0
 			twist.angular.z= 0
 		else :
 			goal = False
-			if Wx > turtle_x:
+			if Wz > turtle_z:
 				rospy.loginfo("Wx>tx")	
-				twist.linear.y = Pv*dist
+				twist.linear.z = Pv*dist
 			else:
-				twist.linear.y = -Pv*dist
-			twist.angular.z=0#twist.angular.z= Po*ori
-		if twist.linear.y > 1:
-			twist.linear.y = 1
-		if twist.linear.y < -1:
-			twist.linear.y = -1		
+				twist.linear.z = -Pv*dist
+			#twist.angular.z=0#twist.angular.z= Po*ori
+		if twist.linear.z > 0.4:
+			twist.linear.z = 0.4
+		if twist.linear.z < -0.4:
+			twist.linear.z = -0.4		
 		state.dist = dist
 		state.ori = ori
 		state.goal=goal
