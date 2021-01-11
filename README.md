@@ -1,5 +1,8 @@
 # bebop
-  git clone https://github.com/MikeMakes/bebop.git  
+  git clone --recurse-submodules https://github.com/MikeMakes/bebop.git  
+  pushd bebop/src/BebopS 	#for sphinx  
+  git checkout -b dev/sphinx 	#for sphinx  
+  popd 				#for sphinx  
   cd bebop  
   catkin_make  
   cd build  
