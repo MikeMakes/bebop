@@ -14,3 +14,6 @@
 [submodule "rqt_image_view"]
 	path = src/rqt_image_view
 	url = https://github.com/ros-visualization/rqt_image_view.git
+[submodule "bebop_autonomy"]
+	path = src/bebop_autonomy
+	url = https://github.com/AutonomyLab/bebop_autonomy.git
