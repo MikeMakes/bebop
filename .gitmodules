@@ -2,4 +2,6 @@
 	path = src/orb_slam_2_ros
 	url = https://github.com/MikeMakes/orb_slam_2_ros.git
 [submodule "BebopS"]
+	path = src/BebopS
+	url = https://github.com/MikeMakes/BebopS
 	branch = dev/sphinx
