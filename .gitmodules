@@ -5,3 +5,12 @@
 	path = src/BebopS
 	url = https://github.com/MikeMakes/BebopS
 	branch = dev/sphinx
+[submodule "PlotJuggler"]
+	path = src/PlotJuggler
+	url = https://github.com/facontidavide/PlotJuggler.git
+[submodule "mav_comm"]
+	path = src/mav_comm
+	url = https://github.com/ethz-asl/mav_comm.git
+[submodule "rqt_image_view"]
+	path = src/rqt_image_view
+	url = https://github.com/ros-visualization/rqt_image_view.git
