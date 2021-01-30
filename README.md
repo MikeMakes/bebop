@@ -8,7 +8,7 @@ $ sudo apt-get install build-essential python-rosdep python-catkin-tools
 $ git clone --recurse-submodules https://github.com/MikeMakes/bebop.git  
 $ pushd bebop/src/BebopS
 $ git checkout -b dev/sphinx
-$ popd
+$ popd && cd bebop
 # Update rosdep database and install dependencies (including parrot_arsdk)
 $ rosdep update
 $ rosdep install --from-paths src -i
