@@ -2,7 +2,10 @@
   descripcion
 
 # Installation  
-Sphinx y dependencias de BebopS (Hasta el paso 4 de https://github.com/MikeMakes/BebopS/tree/dev/sphinx#installation-instructions---ubuntu-1604-with-ros-kinetic-and-sphinx )  
+Sphinx y dependencias de BebopS: (Hasta el paso 4 inclusive de)  
+https://github.com/MikeMakes/BebopS/tree/dev/sphinx#installation-instructions---ubuntu-1604-with-ros-kinetic-and-sphinx  
+
+Copiar repo:
 ```
 $ sudo apt-get install build-essential python-rosdep python-catkin-tools
 $ git clone --recurse-submodules https://github.com/MikeMakes/bebop.git  
@@ -10,7 +13,7 @@ $ pushd bebop/src/BebopS
 $ git checkout -b dev/sphinx
 $ popd
 ```
-[Probablemente no necesitais este paso] Instalar RotorS (base de BebopS), lo borraremos despues pq solo necesitamos las dependencias
+[Probablemente no necesitais este paso] Instalar RotorS (base de BebopS), lo borraremos despues pq solo necesitamos las dependencias:  
 ```
 $ mkdir -p ~/catkin_ws/src
 $ cd ~/catkin_ws/src
@@ -22,7 +25,7 @@ $ rosdep update
 $ rosdep install --from-paths src -i
 $ cd .. && rm -rf ~/catkin_ws
 ```
-Actualizar las dependencias de nuestros repos
+Actualizar las dependencias de nuestros repos:  
 ```
 $ cd bebop
 # Update rosdep database and install dependencies (including parrot_arsdk)
@@ -30,7 +33,7 @@ $ rosdep update
 $ rosdep install --from-paths src -i
 $ catkin_make
 ```
-Then, the access permissions for the files listed in the scripts folder have to be changed. It can be done, using the commands 
+Then, the access permissions for the files listed in the scripts folder have to be changed. It can be done, using the commands:  
 ```
 # To install the unbuffer command required for the script
 $ sudo apt install expect
@@ -41,7 +44,7 @@ $ sudo chmod 777 data_logger.sh
 $ sudo chmod 777 data_logger_publishing.awk
 ```
 
-Finally, the simulation can be performed through the commands listed below (they have to be runned in three different terminals)
+Finally, the simulation can be performed through the commands listed below (they have to be runned in three different terminals):  
 ```
 # A collection of nodes and programs that are pre-requisites of a ROS-based system
 $ roscore
