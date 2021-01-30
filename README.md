@@ -9,6 +9,23 @@ $ git clone --recurse-submodules https://github.com/MikeMakes/bebop.git
 $ pushd bebop/src/BebopS
 $ git checkout -b dev/sphinx
 $ popd
+```
+Instalar RotorS (base de BebopS), lo borraremos despues pq solo necesitamos las dependencias
+```
+$ mkdir -p ~/catkin_ws/src
+$ cd ~/catkin_ws/src
+$ catkin_init_workspace  # initialize your catkin workspace
+$ catkin init
+$ git clone git@github.com:larics/rotors_simulator.git
+$ git clone git@github.com:larics/mav_comm.git
+$ cd ..
+$ rosdep update
+$ rosdep install --from-paths src -i
+$ cd .. && rm -rf ~/catkin_ws/src
+```
+Actualizar las dependencias de nuestros repos
+```
+$ cd bebop
 # Update rosdep database and install dependencies (including parrot_arsdk)
 $ rosdep update
 $ rosdep install --from-paths src -i
