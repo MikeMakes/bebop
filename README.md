@@ -10,7 +10,7 @@ $ pushd bebop/src/BebopS
 $ git checkout -b dev/sphinx
 $ popd
 ```
-Instalar RotorS (base de BebopS), lo borraremos despues pq solo necesitamos las dependencias
+[Probablemente no necesitais este paso] Instalar RotorS (base de BebopS), lo borraremos despues pq solo necesitamos las dependencias
 ```
 $ mkdir -p ~/catkin_ws/src
 $ cd ~/catkin_ws/src
