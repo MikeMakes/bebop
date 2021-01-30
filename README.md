@@ -1,12 +1,47 @@
 # bebop
-  git clone --recurse-submodules https://github.com/MikeMakes/bebop.git  
-  pushd bebop/src/BebopS 	#for sphinx  
-  git checkout -b dev/sphinx 	#for sphinx  
-  popd 				#for sphinx  
-  cd bebop  
-  catkin_make  
-  cd build  
-  make  
+  descripcion
+
+# Installation  
+Sphinx y dependencias de BebopS (Hasta el paso 4 de https://github.com/MikeMakes/BebopS/tree/dev/sphinx#installation-instructions---ubuntu-1604-with-ros-kinetic-and-sphinx )  
+```
+$ sudo apt-get install build-essential python-rosdep python-catkin-tools
+$ git clone --recurse-submodules https://github.com/MikeMakes/bebop.git  
+$ pushd bebop/src/BebopS
+$ git checkout -b dev/sphinx
+$ popd
+# Update rosdep database and install dependencies (including parrot_arsdk)
+$ rosdep update
+$ rosdep install --from-paths src -i
+$ catkin_make
+```
+Then, the access permissions for the files listed in the scripts folder have to be changed. It can be done, using the commands 
+```
+# To install the unbuffer command required for the script
+$ sudo apt install expect
+$ cd ~/bebop/src/BebopS/scripts/
+# Sh script to start recording data from the Parrot-Sphinx simulator
+$ sudo chmod 777 data_logger.sh
+# Awk script in charge of publishing the Parrot-Sphinx simulator data
+$ sudo chmod 777 data_logger_publishing.awk
+```
+
+Finally, the simulation can be performed through the commands listed below (they have to be runned in three different terminals)
+```
+# A collection of nodes and programs that are pre-requisites of a ROS-based system
+$ roscore
+```
+
+```
+# Sh script to enable the publication of the data logger
+$ rosrun bebop_simulator data_logger.sh
+```
+
+```
+# Hovering example
+$ roslaunch bebop_simulator task1_world_with_sphinx.launch
+# Trajectory tracking example
+$ roslaunch bebop_simulator task2_world_with_sphinx.launch
+```
 
 # Links
 Más links https://github.com/topics/bebop2  
