@@ -8,7 +8,7 @@
 [submodule "PlotJuggler"]
 	path = src/PlotJuggler
 	url = https://github.com/facontidavide/PlotJuggler.git
-[submodule "Plotjuggler_msgs"]
+[submodule "src/plotjuggler_msgs"]
 	path = src/plotjuggler_msgs
 	url = https://github.com/PlotJuggler/plotjuggler_msgs.git
 [submodule "mav_comm"]
