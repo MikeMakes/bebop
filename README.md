@@ -1,5 +1,5 @@
 # bebop   - *Under development* -
-Proyecto desarrollado para la asignatura Control y Programación de Robotos en la Universidad de Sevilla por:
+Proyecto desarrollado para la asignatura Control y Programación de Robotos en la Universidad de Sevilla por:   
 [@MikeMakes](https://github.com/MikeMakes)  
 [@Abathar](https://github.com/Abathar)  
 [@DonDanie](https://github.com/DonDanie)  
