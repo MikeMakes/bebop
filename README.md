@@ -1,5 +1,12 @@
-# bebop
-  descripcion
+# bebop *Under development*
+Proyecto desarrollado para la asignatura Control y Programación de Robotos en la Universidad de Sevilla por:
+[@MikeMakes]()
+[@Abathar](https://github.com/Abathar)
+[@DonDanie](https://github.com/DonDanie)
+[@franRonzalez](https://github.com/franRgonzalez)
+[@JoseRomeroF](https://github.com/JoseRomeroF)
+
+
 
 # Installation  
 Sphinx y dependencias de BebopS: (Hasta el paso 4 inclusive de)  
@@ -62,7 +69,7 @@ $ roslaunch bebop_simulator task1_world_with_sphinx.launch
 $ roslaunch bebop_simulator task2_world_with_sphinx.launch
 ```
 
-# Links
+# Docs
 Más links https://github.com/topics/bebop2  
 PlotJuggler https://github.com/facontidavide/PlotJuggler  
 rqt_image_view http://wiki.ros.org/rqt_image_view  
