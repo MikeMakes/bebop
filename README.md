@@ -9,7 +9,7 @@ Proyecto desarrollado para la asignatura Control y Programación de Robotos en l
 
 
 # Installation  
-Sphinx y dependencias de BebopS: (Hasta el paso 4 inclusive de)  
+Sphinx y dependencias de BebopS: (Hasta el paso 4 inclusive de):  
 https://github.com/MikeMakes/BebopS/tree/dev/sphinx#installation-instructions---ubuntu-1604-with-ros-kinetic-and-sphinx  
 
 Copiar repo:
