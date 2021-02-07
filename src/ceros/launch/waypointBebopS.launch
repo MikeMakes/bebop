@@ -1,0 +1,179 @@
+<?xml version="1.0"?>
+<launch>
+    <arg name="simulation" default="false" /> <!-- true if simulated -->
+    <arg name="takeoff_delay" default="10.0" /> <!-- Delayed take off -->
+    <arg name="namespace" default="bebop" />
+    <!-- Ip depends changes for real or simulated (and sim needs data logger)-->
+    <arg name="ip" default="10.202.0.1" if="$(arg simulation)"/>
+    <node pkg="bebop_simulator" name="datalogger" type="data_logger.sh" output="screen" launch-prefix="xterm -e" if="$(arg simulation)">
+        <remap from="/cmd_vel" to="/bebop/cmd_vel"/>
+    </node>
+    <arg name="ip" default="192.168.42.1" unless="$(arg simulation)"/>
+    <arg name="drone_type" default="bebop2" /> <!-- available drone types: bebop1, bebop2 -->
+    <arg name="config_file" default="$(find bebop_driver)/config/defaults.yaml" />
+    <arg name="camera_info_url" default="package://bebop_driver/data/$(arg drone_type)_camera_calib.yaml" />
+
+    <!-- Bebop interface -->
+    <group ns="$(arg namespace)">
+        <node pkg="bebop_driver" name="bebop_driver" type="bebop_driver_node" output="screen" launch-prefix="bash -c 'sleep 10; $0 $@' ">
+            <param name="camera_info_url" value="$(arg camera_info_url)" />
+            <param name="bebop_ip" value="$(arg ip)" />
+            <rosparam command="load" file="$(arg config_file)" />
+        </node>
+        <include file="$(find bebop_description)/launch/description.launch" />
+    </group>
+
+
+
+
+    <!-- BebopS waypoint control Simulated-->
+   <group ns="bebopS" if="$(arg simulation)">
+  <arg name="name" default="bebop"/>
+<arg name="user_account" default="user"/>
+  <arg name="csvFilesStoring" default="false"/>
+  <arg name="csvFilesStoringTime" default="25.0"/> <!-- seconds -->
+  <arg name="waypoint_filter" default="true"/>
+  <arg name="EKFActive" default="false"/>
+  <arg name="enable_plots" default="false"/>
+  <arg name="plotName" default="bebopPlots"/>
+
+  <!-- Launch the controller  -->
+  <node name="position_controller_with_sphinx_node" pkg="bebop_simulator" type="position_controller_with_sphinx_node" output="screen"> 
+    <rosparam command="load" file="$(find bebop_simulator)/resource/controller_bebop.yaml" />
+    <rosparam command="load" file="$(find bebop_simulator)/resource/bebop.yaml" />
+    <rosparam command="load" file="$(find bebop_simulator)/resource/EKF_matrix.yaml" />
+    <rosparam command="load" file="$(find bebop_simulator)/resource/waypoint_filter.yaml" />
+    <param name="csvFilesStoring" value="$(arg csvFilesStoring)"/>
+    <param name="csvFilesStoringTime" value="$(arg csvFilesStoringTime)"/>
+    <param name="user_account" value="$(arg user_account)"/>
+    <param name="waypoint_filter" value="$(arg waypoint_filter)"/>
+    <param name="EKFActive" value="$(arg EKFActive)"/>
+    <remap from="/odom" to="/bebop/odom" />
+    <remap from="/takeoff" to="/bebop/takeoff" />
+    <remap from="/cmd_vel" to="/bebop/cmd_vel" />
+    <remap from="/land" to="/bebop/land" />
+    <remap from="/command/trajectory" to="/bebop/command/trajectory" />
+    <remap from="/referenceAngles" to="/bebop/referenceAngles" />
+    <remap from="/filteredOutput" to="/bebop/filteredOutput" />
+    <remap from="/smoothedTrajectory" to="/bebop/smoothedTrajectory" />
+    <remap from="/stateErrors" to="/bebop/stateErrors" />
+    <remap from="/command/trajectory" to="/bebop/command/trajectory" />
+    <remap from="/parrotSphinx" to="/bebop/parrotSphinx" />
+  </node>
+
+  <group ns="$(arg name)">
+
+  <!-- Launch the trajectory generator -->
+    <node name="waypoint_example_with_sphinx" pkg="bebop_simulator" type="waypoint_example_with_sphinx" output="screen" args="$(find bebop_simulator)/resource/waypoints.txt"/>   
+
+     <node pkg="bebop_driver" name="bebop_driver" type="bebop_driver_node" output="screen">
+       <param name="camera_info_url" value="$(arg camera_info_url)" />
+       <param name="bebop_ip" value="$(arg ip)" />
+       <rosparam command="load" file="$(arg config_file)" />
+    </node>
+
+    <param name="robot_description" command="$(find xacro)/xacro $(find bebop_description)/urdf/bebop_base.urdf.xacro"/>
+    <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher"/>
+
+  </group>
+    </group>
+
+
+
+    <!-- BebopS waypoint control -->
+   <group ns="bebopS" unless="$(arg simulation)">
+  <arg name="name" default="bebop"/>
+<node name="position_controller_node" pkg="bebop_simulator" type="position_controller_node" output="screen"> 
+      <rosparam command="load" file="$(find bebop_simulator)/resource/controller_bebop.yaml" />
+      <rosparam command="load" file="$(find bebop_simulator)/resource/bebop.yaml" />
+      <rosparam command="load" file="$(find bebop_simulator)/resource/EKF_matrix.yaml" />
+      <rosparam command="load" file="$(find bebop_simulator)/resource/waypoint_filter.yaml" />
+      <param name="use_sim_time" value="$(arg use_sim_time)" />
+      <param name="csvFilesStoring" value="$(arg csvFilesStoring)"/>
+      <param name="csvFilesStoringTime" value="$(arg csvFilesStoringTime)"/>
+      <param name="user_account" value="$(arg user_account)"/>
+      <param name="waypoint_filter" value="$(arg waypoint_filter)"/>
+      <param name="EKFActive" value="$(arg EKFActive)"/>
+      <remap from="/command/motor_speed" to="/gazebo/command/motor_speed" />
+      <remap from="/odometry" to="/bebop/odometry" />
+      <remap from="/odometry_gt" to="/bebop/odometry_gt" />
+      <remap from="/referenceAngles" to="/bebop/referenceAngles" />
+      <remap from="/filteredOutput" to="/bebop/filteredOutput" />
+      <remap from="/stateErrors" to="/bebop/stateErrors" />
+      <remap from="/smoothedTrajectory" to="/bebop/smoothedTrajectory" />
+      <remap from="/command/trajectory" to="/bebop/command/trajectory" />
+      <remap from="/uTerrComponents" to="/bebop/uTerrComponents" />
+      <remap from="/zVelocityComponents" to="/bebop/zVelocityComponents" />
+      <remap from="/positionAndVelocityErrors" to="/bebop/positionAndVelocityErrors" />
+      <remap from="/angularAndAngularVelocityErrors" to="/bebop/angularAndAngularVelocityErrors" />
+    </node>
+
+    <!-- Launch the trajectory generator -->
+   <group ns="$(arg name)">
+       <node name="waypoint_example" pkg="bebop_simulator" type="waypoint_example" output="screen" args="$(find bebop_simulator)/resource/waypoints.txt"/>   
+    </group>
+   </group>
+
+
+
+
+    <!-- Delayed take off -->
+    <node pkg="rostopic" type="rostopic" name="takeoff" args="pub --once bebop/takeoff std_msgs/Empty" output="screen" launch-prefix="bash -c 'sleep $(arg takeoff_delay); $0 $@' "/>
+
+
+<!-- Slam -->
+<arg name="pitch_slam" default="0.15" />
+<arg name="slam" default="false" />
+<group ns="orb" if="$(arg slam)">
+  <node name="" pkg="tf2_ros" type="static_transform_publisher" args="0 0 0 1.51 $(arg pitch_slam) 0 odom map" output="screen"/>
+
+  <node name="orb_slam2_mono" pkg="orb_slam2_ros"
+      type="orb_slam2_ros_mono" output="screen" launch-prefix="bash -c 'sleep $(arg takeoff_delay); $0 $@' ">
+
+       <remap from="/camera/image_raw" to="/bebop/image_raw" />
+
+       <param name="publish_pointcloud" type="bool" value="true" />
+       <param name="publish_pose" type="bool" value="true" />
+       <param name="localize_only" type="bool" value="false" />
+       <param name="reset_map" type="bool" value="false" />
+
+       <!-- static parameters -->
+       <param name="load_map" type="bool" value="false" />
+       <param name="map_file" type="string" value="map.bin" />
+       <param name="voc_file" type="string" value="$(find orb_slam2_ros)/orb_slam2/Vocabulary/ORBvoc.txt" />
+
+       <param name="pointcloud_frame_id" type="string" value="map" />
+       <param name="camera_frame_id" type="string" value="camera_base_link" />
+       <param name="min_num_kf_in_map" type="int" value="5" />
+
+       <!-- ORB parameters -->
+       <param name="/ORBextractor/nFeatures" type="int" value="2000" />
+       <param name="/ORBextractor/scaleFactor" type="double" value="1.2" />
+       <param name="/ORBextractor/nLevels" type="int" value="8" />
+       <param name="/ORBextractor/iniThFAST" type="int" value="20" />
+       <param name="/ORBextractor/minThFAST" type="int" value="7" />
+
+       <!-- Camera parameters -->
+       <!-- Camera frames per second -->
+       <param name="camera_fps" type="int" value="30" />
+       <!-- Color order of the images (0: BGR, 1: RGB. It is ignored if images are grayscale) -->
+       <param name="camera_rgb_encoding" type="bool" value="true" />
+
+        <!-- Camera calibration parameters -->
+        <!--If the node should wait for a camera_info topic to take the camera calibration data-->
+       <param name="load_calibration_from_cam" type="bool" value="false" />
+       <!-- Camera calibration and distortion parameters (OpenCV) -->
+      <param name="camera_fx" type="double" value="632.7927856445312" />
+      <param name="camera_fy" type="double" value="626.8605346679688" />
+      <param name="camera_cx" type="double" value="311.43603515625" />
+      <param name="camera_cy" type="double" value="248.0950164794922" />
+       <!-- Camera calibration and distortion parameters (OpenCV) -->
+      <param name="camera_k1" type="double" value="-0.09097914397716522" />
+      <param name="camera_k2" type="double" value="0.06503549218177795" />
+      <param name="camera_p1" type="double" value="0.000849052332341671" />
+      <param name="camera_p2" type="double" value="0.001785792293958366" />
+      <param name="camera_k3" type="double" value="0.0" />
+  </node>
+</group>
+
+</launch>

@@ -1,0 +1,90 @@
+<?xml version="1.0"?>
+<launch>
+    <arg name="simulation" default="false" /> <!-- true if simulated -->
+    <arg name="takeoff_delay" default="10.0" /> <!-- Delayed take off -->
+    <arg name="namespace" default="bebop" />
+    <!-- Ip depends changes for real or simulated (and sim needs data logger)-->
+    <arg name="ip" default="10.202.0.1" if="$(arg simulation)"/>
+    <node pkg="bebop_simulator" name="datalogger" type="data_logger.sh" output="screen" launch-prefix="xterm -e" if="$(arg simulation)">
+        <remap from="/cmd_vel" to="/bebop/cmd_vel"/>
+    </node>
+    <arg name="ip" default="192.168.42.1" unless="$(arg simulation)"/>
+    <arg name="drone_type" default="bebop2" /> <!-- available drone types: bebop1, bebop2 -->
+    <arg name="config_file" default="$(find bebop_driver)/config/defaults.yaml" />
+    <arg name="camera_info_url" default="package://bebop_driver/data/$(arg drone_type)_camera_calib.yaml" />
+
+    <!-- Bebop interface -->
+    <group ns="$(arg namespace)">
+        <node pkg="bebop_driver" name="bebop_driver" type="bebop_driver_node" output="screen">
+            <param name="camera_info_url" value="$(arg camera_info_url)" />
+            <param name="bebop_ip" value="$(arg ip)" />
+            <rosparam command="load" file="$(arg config_file)" />
+        </node>
+        <include file="$(find bebop_description)/launch/description.launch" />
+    </group>
+
+    <!-- Teleop -->
+    <node pkg="teleop_twist_keyboard" name="keyboard" type="teleop_twist_keyboard.py" output="screen" launch-prefix="xterm -e">
+	<remap from="/cmd_vel" to="/bebop/cmd_vel"/>
+    </node>
+
+    <!-- Delayed take off -->
+    <node pkg="rostopic" type="rostopic" name="takeoff" args="pub --once bebop/takeoff std_msgs/Empty" output="screen" launch-prefix="bash -c 'sleep $(arg takeoff_delay); $0 $@' "/>
+
+
+<!-- Slam -->
+<arg name="slam" default="false" />
+<arg name="pitch_slam" default="0.15" />
+<group ns="orb" if="$(arg slam)">
+  <node name="" pkg="tf2_ros" type="static_transform_publisher" args="0 0 0 1.51 $(arg pitch_slam) 0 odom map" output="screen"/>
+
+  <node name="orb_slam2_mono" pkg="orb_slam2_ros"
+      type="orb_slam2_ros_mono" output="screen" launch-prefix="bash -c 'sleep $(arg takeoff_delay); $0 $@' ">
+
+       <remap from="/camera/image_raw" to="/bebop/image_raw" />
+
+       <param name="publish_pointcloud" type="bool" value="true" />
+       <param name="publish_pose" type="bool" value="true" />
+       <param name="localize_only" type="bool" value="false" />
+       <param name="reset_map" type="bool" value="false" />
+
+       <!-- static parameters -->
+       <param name="load_map" type="bool" value="false" />
+       <param name="map_file" type="string" value="map.bin" />
+       <param name="voc_file" type="string" value="$(find orb_slam2_ros)/orb_slam2/Vocabulary/ORBvoc.txt" />
+
+       <param name="pointcloud_frame_id" type="string" value="map" />
+       <param name="camera_frame_id" type="string" value="camera_base_link" />
+       <param name="min_num_kf_in_map" type="int" value="5" />
+
+       <!-- ORB parameters -->
+       <param name="/ORBextractor/nFeatures" type="int" value="2000" />
+       <param name="/ORBextractor/scaleFactor" type="double" value="1.2" />
+       <param name="/ORBextractor/nLevels" type="int" value="8" />
+       <param name="/ORBextractor/iniThFAST" type="int" value="20" />
+       <param name="/ORBextractor/minThFAST" type="int" value="7" />
+
+       <!-- Camera parameters -->
+       <!-- Camera frames per second -->
+       <param name="camera_fps" type="int" value="30" />
+       <!-- Color order of the images (0: BGR, 1: RGB. It is ignored if images are grayscale) -->
+       <param name="camera_rgb_encoding" type="bool" value="true" />
+
+        <!-- Camera calibration parameters -->
+        <!--If the node should wait for a camera_info topic to take the camera calibration data-->
+       <param name="load_calibration_from_cam" type="bool" value="false" />
+       <!-- Camera calibration and distortion parameters (OpenCV) -->
+      <param name="camera_fx" type="double" value="632.7927856445312" />
+      <param name="camera_fy" type="double" value="626.8605346679688" />
+      <param name="camera_cx" type="double" value="311.43603515625" />
+      <param name="camera_cy" type="double" value="248.0950164794922" />
+       <!-- Camera calibration and distortion parameters (OpenCV) -->
+      <param name="camera_k1" type="double" value="-0.09097914397716522" />
+      <param name="camera_k2" type="double" value="0.06503549218177795" />
+      <param name="camera_p1" type="double" value="0.000849052332341671" />
+      <param name="camera_p2" type="double" value="0.001785792293958366" />
+      <param name="camera_k3" type="double" value="0.0" />
+  </node>
+</group>
+
+</launch>

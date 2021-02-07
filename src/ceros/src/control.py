@@ -24,8 +24,8 @@ Wy=rospy.get_param('Wy',0)
 Wz=rospy.get_param('Wz',3)
 Pv=rospy.get_param('Pv',1)
 Po=rospy.get_param('Po',2)
-thresh=rospy.get_param('~thresh',0.1)
-rate = rospy.Rate(rospy.get_param('~hz',100))
+thresh=rospy.get_param('thresh',0.1)
+rate = rospy.Rate(rospy.get_param('hz',100))
 
 def callback(data):
 	global turtle_x,turtle_y,turtle_theta, turtle_z
