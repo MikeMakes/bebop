@@ -30,6 +30,7 @@ $ catkin init
 $ git clone https://github.com/gsilano/rotors_simulator.git
 $ cd ..
 $ rosdep update
+$ cd ~/catkin_ws
 $ rosdep install --from-paths src -i
 $ cd .. && rm -rf ~/catkin_ws
 ```
