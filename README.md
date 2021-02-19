@@ -25,6 +25,7 @@ $ popd
 $ mkdir -p ~/catkin_ws/src
 $ cd ~/catkin_ws/src
 $ catkin_init_workspace  # initialize your catkin workspace
+$ cd ..
 $ catkin init
 $ git clone https://github.com/gsilano/rotors_simulator.git
 $ cd ..
