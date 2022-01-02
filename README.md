@@ -1,5 +1,11 @@
-# bebop   - *Under development* -
-Proyecto desarrollado para la asignatura Control y Programación de Robotos en la Universidad de Sevilla por:   
+# Bebop ROS packages compilation - SLAM, configs and launches  
+
+A compilation of differents ros packages useful for controlling and simulating a Bebop drone.  
+The packages are configured for the Bebop 2, and there are slighly modifications when convenient.  
+As an example, ORB SLAM 2 takes the ODOM values from Bebop and uses it to scale the map at take off. Kinda works most of the time.
+There is a .launch that does this.  
+
+
 [@MikeMakes](https://github.com/MikeMakes)  
 [@Abathar](https://github.com/Abathar)  
 [@DonDanie](https://github.com/DonDanie)  
